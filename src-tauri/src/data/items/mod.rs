@@ -15,6 +15,14 @@ pub enum Item {
     Document(Document),
 }
 
+#[derive(Clone, Serialize)]
+struct ItemEvent {
+    status: String,
+}
+
+// #[command]
+// pub fn get_title() {}
+
 #[command]
 pub fn item_move(item_id: String, target_id: String, is_directory: bool) -> Vec<Item> {
     let mut data = Data::read();

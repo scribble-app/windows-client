@@ -5,7 +5,7 @@ mod data;
 use data::{
     get_items, get_state,
     items::{
-        directory::{create_directory, get_directory, toggle_open_directory},
+        directory::{create_directory, get_directory, set_title, toggle_open_directory},
         document::{create_document, get_document, get_title, write_document},
         item_move, remove_current,
     },
@@ -50,6 +50,7 @@ fn main() {
             write_document,
             create_directory,
             get_directory,
+            set_title,
             toggle_open_directory,
             item_move,
             remove_current

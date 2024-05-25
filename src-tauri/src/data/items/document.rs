@@ -1,4 +1,4 @@
-use super::Item;
+use super::{Item, ItemEvent};
 use crate::{
     data::{Data, DATA_DIRECTORY_NAME, LOCAL_DIRECTORY_NAME},
     AppState, StateVariant,
@@ -15,11 +15,6 @@ use std::{
 };
 use tauri::{command, State, Window};
 use uuid::Uuid;
-
-#[derive(Clone, Serialize)]
-struct DocEvent {
-    status: String,
-}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Color {
@@ -234,8 +229,8 @@ pub fn write_document(content: String, state: State<AppState>, window: Window) -
 
         window
             .emit(
-                "doc",
-                DocEvent {
+                "item",
+                ItemEvent {
                     status: "updated".to_string(),
                 },
             )

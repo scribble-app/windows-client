@@ -2,34 +2,29 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-const useDocumentState = (
+const useDirectoryTitleState = (
   searchParams: ReadonlyURLSearchParams,
 ): [string, Dispatch<SetStateAction<string>>] => {
-  const [doc, setDoc] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
 
-  const saveDoc = () => {
-    invoke<string>("write_document", {
-      content: doc,
+  const saveTitle = () => {
+    invoke<string>("set_title", {
+      title,
     })
-      .then((result) => setDoc(result))
+      .then((result) => setTitle(result))
       .catch((error) => console.error(error));
   };
 
   useEffect(() => {
-    if (doc !== "") {
-      saveDoc();
-    }
-  }, [searchParams]);
-
-  useEffect(() => {
     let timeoutId = setTimeout(() => {
-      saveDoc();
+      console.log("saved");
+      saveTitle();
     }, 1000);
 
     return () => clearTimeout(timeoutId);
-  }, [doc]);
+  }, [title]);
 
-  return [doc, setDoc];
+  return [title, setTitle];
 };
 
-export default useDocumentState;
+export default useDirectoryTitleState;

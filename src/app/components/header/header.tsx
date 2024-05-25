@@ -7,30 +7,24 @@ import {
   HeaderArrowButton,
 } from "./style";
 import ViewButtons from "./components/viewButtons";
-import { ArrowIconLeft, ArrowIconRight, SplitIcon } from "@/app/styles/icons";
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { SplitIcon } from "@/app/styles/icons";
+import { useContext, useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ViewModeContext from "@/contexts/viewModeContext";
 import { ViewMode } from "@/type";
 import HintWrapper from "../hintWrapper/hintWrapper";
 import { listen } from "@tauri-apps/api/event";
-import { error } from "console";
+import { ArrowIconForwardBack } from "@/app/styles/icons";
 
-interface DocEvent {
+interface ItemEvent {
   status: string;
 }
 
 const Header = () => {
   const { viewMode, setViewMode } = useContext(ViewModeContext);
 
-  const pathname = useParams();
+  const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [title, setTitle] = useState("");
@@ -38,7 +32,7 @@ const Header = () => {
   const viewModeTitles = ["preview", "edit", "split"];
 
   useEffect(() => {
-    const unlisten = listen<DocEvent>("doc", (event) => {
+    const unlisten = listen<ItemEvent>("item", (event) => {
       if (event.payload.status === "updated") {
         invoke<string>("get_title", { id: "" })
           .then((result) => setTitle(result))
@@ -67,17 +61,17 @@ const Header = () => {
         <HeaderButtonsDiv>
           <HintWrapper hint="Go back">
             <HeaderArrowButton onClick={() => router.back()}>
-              <ArrowIconLeft />
+              <ArrowIconForwardBack />
             </HeaderArrowButton>
           </HintWrapper>
           <HintWrapper hint="Go forward">
             <HeaderArrowButton onClick={() => router.forward()}>
-              <ArrowIconRight />
+              <ArrowIconForwardBack />
             </HeaderArrowButton>
           </HintWrapper>
         </HeaderButtonsDiv>
         <HeaderTitleText>{title && title}</HeaderTitleText>
-        {searchParams.get("id") && (
+        {pathname === "/document" && (
           <HeaderButtonsDiv>
             <HintWrapper
               hint={`Current view: ${viewModeTitles[viewMode]}\n${viewMode !== ViewMode.Middle ? "Click to split screen" : ""}`}

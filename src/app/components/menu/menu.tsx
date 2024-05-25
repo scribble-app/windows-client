@@ -18,7 +18,7 @@ interface Props {
   width: number;
 }
 
-interface DocEvent {
+interface ItemEvent {
   status: string;
 }
 
@@ -159,7 +159,7 @@ const Menu = (props: Props) => {
   };
 
   useEffect(() => {
-    const unlisten = listen<DocEvent>("doc", (event) => {
+    const unlisten = listen<ItemEvent>("item", (event) => {
       if (event.payload.status === "updated") {
         invoke<Item[]>("get_items")
           .then((result) => {

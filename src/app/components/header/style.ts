@@ -36,6 +36,10 @@ export const HeaderButtonsDiv = styled.div`
   &:last-child {
     justify-self: flex-end;
   }
+
+  & > :first-child .arrow {
+    transform: rotate(180deg);
+  }
 `;
 
 export const HeaderArrowButton = styled.button`
@@ -68,7 +72,7 @@ export const HeaderViewButton = styled.button`
   }
 `;
 
-export const HeaderViewMiddleButton = styled(HeaderViewButton)<{
+export const HeaderViewMiddleButton = styled(HeaderViewButton) <{
   $active?: boolean;
 }>`
   background-color: transparent;
@@ -78,6 +82,6 @@ export const HeaderViewMiddleButton = styled(HeaderViewButton)<{
   align-items: center;
   path {
     fill: ${(props) =>
-      props.$active ? props.theme.colors.white : props.theme.colors.gray50};
+    props.$active ? props.theme.colors.white : props.theme.colors.gray50};
   }
 `;
