@@ -39,7 +39,7 @@ struct Progress {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Document {
     pub id: String,
-    title: String,
+    pub title: String,
     description: String,
     created_at: u64,
     updated_at: u64,
@@ -239,46 +239,5 @@ pub fn write_document(content: String, state: State<AppState>, window: Window) -
         content
     } else {
         "none".into()
-    }
-}
-
-#[command]
-pub fn get_title(id: String, state: State<AppState>) -> String {
-    fn get(items: &Vec<Item>, id: &str) -> Option<String> {
-        for item in items {
-            match item {
-                Item::Document(doc) => {
-                    if doc.id == id {
-                        return Some(doc.title.clone());
-                    }
-                }
-                Item::Directory(dir) => {
-                    if let Some(title) = get(&dir.childrens, id) {
-                        return Some(title);
-                    }
-                }
-            }
-        }
-        None
-    }
-
-    if id == "" {
-        if let StateVariant::Document(id) = state.state.lock().unwrap().deref() {
-            let data = Data::read();
-
-            if let Some(title) = get(&data, &id) {
-                return title;
-            }
-        }
-
-        "".to_string()
-    } else {
-        let data = Data::read();
-
-        if let Some(title) = get(&data, &id) {
-            return title;
-        }
-
-        "".to_string()
     }
 }

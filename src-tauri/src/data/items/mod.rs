@@ -20,8 +20,49 @@ struct ItemEvent {
     status: String,
 }
 
-// #[command]
-// pub fn get_title() {}
+#[command]
+pub fn get_title(id: String, state: State<AppState>) -> Result<String, String> {
+    let data = Data::read();
+
+    fn get(childrens: &Vec<Item>, id: &str) -> Result<String, String> {
+        for child in childrens {
+            match child {
+                Item::Document(doc) => {
+                    if doc.id == id {
+                        return Ok(doc.title.clone());
+                    }
+                }
+                Item::Directory(dir) => {
+                    if dir.id == id {
+                        return Ok(dir.title.clone());
+                    } else if let Ok(title) = get(&dir.childrens, id) {
+                        return Ok(title);
+                    }
+                }
+            }
+        }
+        Err("Item not found".to_string())
+    }
+
+    if id == "" {
+        match state.state.lock().unwrap().deref() {
+            StateVariant::Directory(id) => match get(&data, &id) {
+                Ok(title) => Ok(title),
+                Err(error) => Err(error),
+            },
+            StateVariant::Document(id) => match get(&data, &id) {
+                Ok(title) => Ok(title),
+                Err(error) => Err(error),
+            },
+            StateVariant::None => Err("Incorrect state".to_string()),
+        }
+    } else {
+        match get(&data, &id) {
+            Ok(title) => Ok(title),
+            Err(error) => Err(error),
+        }
+    }
+}
 
 #[command]
 pub fn item_move(item_id: String, target_id: String, is_directory: bool) -> Vec<Item> {

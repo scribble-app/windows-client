@@ -1,4 +1,4 @@
-import { DragEvent, MouseEvent } from "react";
+import { DragEvent, KeyboardEvent, MouseEvent } from "react";
 import DropIndicator from "./dropIndicator";
 import {
   DirectoryArrowButton,
@@ -35,6 +35,12 @@ const DirectoryItem = (props: Props) => {
     }
   };
 
+  const enter = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter") {
+      router.push(`/directory?id=${dir.id}`);
+    }
+  };
+
   return (
     <>
       <DropIndicator beforId={dir.id} />
@@ -47,6 +53,7 @@ const DirectoryItem = (props: Props) => {
           tabIndex={0}
           onDragStart={(e) => handleDragStart(e, dir)}
           onClick={(e) => click(e)}
+          onKeyDown={(e) => enter(e)}
           $isClosed={!dir.is_open}
           $isActive={currentId === dir.id}
         >

@@ -1,17 +1,38 @@
 use std::ops::Deref;
 
 use super::{Item, ItemEvent};
-use crate::{data::Data, AppState, StateVariant};
+use crate::{
+    data::{self, Data},
+    AppState, StateVariant,
+};
 use serde::{Deserialize, Serialize};
 use tauri::{command, State, Window};
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Column {
+    id: String,
+    title: String,
+    color: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Directory {
     pub id: String,
-    title: String,
+    pub title: String,
     is_open: bool,
+    columns: Vec<Column>,
     pub childrens: Vec<Item>,
+}
+
+impl Column {
+    fn new(title: String, color: String) -> Self {
+        Self {
+            id: Uuid::new_v4().to_string(),
+            title,
+            color,
+        }
+    }
 }
 
 impl Directory {
@@ -20,6 +41,7 @@ impl Directory {
             id: Uuid::new_v4().to_string(),
             title: "".into(),
             is_open: false,
+            columns: Vec::new(),
             childrens: Vec::new(),
         }
     }
@@ -126,6 +148,44 @@ pub fn set_title(title: String, state: State<AppState>, window: Window) -> Resul
         } else {
             return Err("Directory not found".to_string());
         }
+    }
+    Err("Incorrect state".to_string())
+}
+
+#[command]
+pub fn add_column(
+    title: String,
+    color: String,
+    state: State<AppState>,
+) -> Result<Vec<Column>, String> {
+    if let StateVariant::Directory(id) = state.state.lock().unwrap().deref() {
+        let mut data = Data::read();
+        let column = Column::new(title, color);
+
+        fn add(
+            childrens: &mut Vec<Item>,
+            column: &Column,
+            id: &str,
+        ) -> Result<Vec<Column>, String> {
+            for child in childrens {
+                if let Item::Directory(dir) = child {
+                    if dir.id == id {
+                        dir.columns.push(column.clone());
+                        return Ok(dir.columns.clone());
+                    } else if let Ok(result) = add(&mut dir.childrens, column, id) {
+                        return Ok(result);
+                    }
+                }
+            }
+            Err("Directory not found".to_string())
+        }
+        return match add(&mut data, &column, &id) {
+            Ok(result) => {
+                Data::write(data);
+                Ok(result)
+            }
+            Err(error) => Err(error),
+        };
     }
     Err("Incorrect state".to_string())
 }

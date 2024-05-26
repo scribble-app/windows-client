@@ -4,7 +4,7 @@ import { MainText } from "@/app/styles/globalStyles";
 
 export const HintWrapperDiv = styled.div``;
 
-export const HintBlockDiv = styled(motion.div) <{
+export const HintBlockDiv = styled(motion.div)<{
   $divPosition: number;
   $arrowPosition: number;
 }>`
@@ -14,13 +14,13 @@ export const HintBlockDiv = styled(motion.div) <{
   border: 1px solid ${(props) => props.theme.colors.gray100};
   border-radius: 6px;
   padding: 4px 8px;
-  transform: translateX(-40);
+  margin-top: 6px;
   z-index: 1;
   box-sizing: border-box;
   left: ${(props) => props.$divPosition}px;
   & > svg {
     position: absolute;
-    top: 0px;
+    top: -6px;
     left: ${(props) => props.$arrowPosition}px;
   }
 `;

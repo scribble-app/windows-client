@@ -46,9 +46,13 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    invoke<string>("get_title", { id: searchParams.get("id") })
-      .then((result) => setTitle(result))
-      .catch((error) => console.error(error));
+    if (searchParams.get("id")) {
+      invoke<string>("get_title", { id: searchParams.get("id") })
+        .then((result) => setTitle(result))
+        .catch((error) => console.error(error));
+    } else {
+      setTitle(pathname.charAt(1).toUpperCase() + pathname.slice(2));
+    }
   }, [searchParams]);
 
   const click = () => {
@@ -74,7 +78,7 @@ const Header = () => {
         {pathname === "/document" && (
           <HeaderButtonsDiv>
             <HintWrapper
-              hint={`Current view: ${viewModeTitles[viewMode]}\n${viewMode !== ViewMode.Middle ? "Click to split screen" : ""}`}
+              hint={`Current view: <b>${viewModeTitles[viewMode]}</b><br />${viewMode !== ViewMode.Middle ? "Click to split screen" : ""}`}
             >
               <HeaderViewMiddleButton
                 {...(viewMode === ViewMode.Middle && { $active: true })}
@@ -84,7 +88,7 @@ const Header = () => {
               </HeaderViewMiddleButton>
             </HintWrapper>
             <HintWrapper
-              hint={`Current view: ${viewModeTitles[viewMode]}\n${viewMode === ViewMode.Preview ? "Click to edit" : "Click to preview"}`}
+              hint={`Current view: <b>${viewModeTitles[viewMode]}</b><br />${viewMode === ViewMode.Preview ? "Click to edit" : "Click to preview"}`}
             >
               <ViewButtons viewMode={viewMode} setViewMode={setViewMode} />
             </HintWrapper>

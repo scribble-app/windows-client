@@ -21,7 +21,9 @@ const HintWrapper = (props: Props) => {
       let btn = hintContainerRef.current;
       let el = hintTextRef.current;
       let newPadding = Math.min(
-        btn.getBoundingClientRect().x - btn.clientWidth,
+        btn.getBoundingClientRect().x -
+          el.clientWidth +
+          ((el.clientWidth - btn.clientWidth) / 2 + btn.clientWidth),
         window.innerWidth - el.clientWidth - 10,
       );
 

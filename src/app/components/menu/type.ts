@@ -25,10 +25,17 @@ interface Doc {
   tags: Tag[];
 }
 
+interface Column {
+  id: string;
+  title: string;
+  color: string;
+}
+
 interface Dir {
   id: string;
   title: string;
   is_open: boolean;
+  columns: Column[];
   childrens: Item[];
 }
 

@@ -27,8 +27,8 @@ export default function RootLayout({
           <ThemeWrapper>
             <Suspense>
               <Title />
+              <AppWrapper>{children}</AppWrapper>
             </Suspense>
-            <AppWrapper>{children}</AppWrapper>
           </ThemeWrapper>
         </StyledComponentsRegistry>
       </body>

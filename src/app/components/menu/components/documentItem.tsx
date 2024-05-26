@@ -14,6 +14,7 @@ import { ClockIcon, DocumentIcon } from "@/app/styles/icons";
 import getTime from "@/utils/getTime";
 import DropIndicator from "./dropIndicator";
 import { useRouter } from "next/navigation";
+import HintWrapper from "../../hintWrapper/hintWrapper";
 
 interface Props {
   doc: Doc;
