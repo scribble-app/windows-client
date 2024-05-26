@@ -100,6 +100,7 @@ export const ColumnSubmitForm = styled.form`
 
 export const ColumnsContainerDiv = styled.div`
   display: flex;
+  gap: 10px;
 `;
 
 export const ColumnDiv = styled.div<{ $color: string }>`
@@ -107,13 +108,14 @@ export const ColumnDiv = styled.div<{ $color: string }>`
   flex-direction: column;
   padding: 12px;
   gap: 10px;
+  height: fit-content;
   border-radius: 8px;
   background-color: ${(props) => props.$color}33;
 `;
 
 export const ColumnTitleDiv = styled.div<{ $color: string }>`
   display: flex;
-  width: 120px;
+  width: 160px;
   justify-content: space-between;
 
   button {
@@ -136,6 +138,11 @@ export const ColumnTitleText = styled(MainText)<{ $color: string }>`
   color: ${(props) => props.$color};
 `;
 
+export const ColumnItemsDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 export const UntaggedItemsDiv = styled.div`
   display: flex;
   gap: 10px;
@@ -146,7 +153,7 @@ export const SmallItemButton = styled.button`
   display: flex;
   gap: 10px;
   align-items: center;
-  width: 120px;
+  width: 160px;
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
@@ -164,4 +171,11 @@ export const SmallItemButton = styled.button`
 
 export const SmallItemTitleText = styled(MainText)`
   font-size: 16px;
+`;
+
+export const ColumnDropIndicatorDiv = styled.div`
+  background-color: ${(props) => props.theme.colors.white};
+  border-radius: 4px;
+  height: 3px;
+  margin: 4px 8px;
 `;

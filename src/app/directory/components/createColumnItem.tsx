@@ -15,6 +15,7 @@ import {
 } from "react";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { invoke } from "@tauri-apps/api/tauri";
+import HintWrapper from "@/app/components/hintWrapper/hintWrapper";
 
 interface Props {
   searchParams: ReadonlyURLSearchParams;
@@ -62,10 +63,12 @@ const CreateColumnItem = (props: Props) => {
           />
         </>
       )}
-      <ColumnSubmitButton>
-        {isAcitve && <MainText>Submit</MainText>}
-        <CrossIcon />
-      </ColumnSubmitButton>
+      <HintWrapper hint="Create column">
+        <ColumnSubmitButton>
+          {isAcitve && <MainText>Submit</MainText>}
+          <CrossIcon />
+        </ColumnSubmitButton>
+      </HintWrapper>
     </ColumnSubmitForm>
   );
 };

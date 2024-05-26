@@ -8,6 +8,7 @@ use document::Document;
 use serde::{Deserialize, Serialize};
 use std::{env, fs::remove_file, ops::Deref, path::Path};
 use tauri::{command, State};
+use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Item {
@@ -18,6 +19,34 @@ pub enum Item {
 #[derive(Clone, Serialize)]
 struct ItemEvent {
     status: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct Tag {
+    id: String,
+    title: String,
+    color: String,
+    is_belong_column: bool,
+}
+
+impl Tag {
+    fn new(title: String, color: String) -> Self {
+        Self {
+            id: Uuid::new_v4().to_string(),
+            title,
+            color,
+            is_belong_column: false,
+        }
+    }
+
+    fn new_with_id(id: String, title: String, color: String) -> Self {
+        Self {
+            id,
+            title,
+            color,
+            is_belong_column: true,
+        }
+    }
 }
 
 #[command]

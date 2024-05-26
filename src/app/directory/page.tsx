@@ -16,6 +16,7 @@ import DocumentSmallItem from "./components/documentSmallItem";
 import DirectorySmallItem from "./components/directorySmallItem";
 import CreateColumnItem from "./components/createColumnItem";
 import ColumnItem from "./components/columnItem";
+import { tags } from "@lezer/highlight";
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -49,6 +50,7 @@ const Page = () => {
             <ColumnItem
               key={column.id}
               column={column}
+              childrens={childrens}
               setColumns={setColumns}
             />
           ))}
@@ -58,20 +60,32 @@ const Page = () => {
         {childrens.map((child) => {
           if ("Document" in child) {
             const documentItem = child as { Document: Doc };
-            return (
-              <DocumentSmallItem
-                key={documentItem.Document.id}
-                doc={documentItem.Document}
-              />
-            );
+            if (
+              !documentItem.Document.tags.some(
+                (tag) => tag.is_belong_column === true,
+              )
+            ) {
+              return (
+                <DocumentSmallItem
+                  key={documentItem.Document.id}
+                  doc={documentItem.Document}
+                />
+              );
+            }
           } else if ("Directory" in child) {
             const directoryItem = child as { Directory: Dir };
-            return (
-              <DirectorySmallItem
-                key={directoryItem.Directory.id}
-                dir={directoryItem.Directory}
-              />
-            );
+            if (
+              !directoryItem.Directory.tags.some(
+                (tags) => tags.is_belong_column === true,
+              )
+            ) {
+              return (
+                <DirectorySmallItem
+                  key={directoryItem.Directory.id}
+                  dir={directoryItem.Directory}
+                />
+              );
+            }
           }
         })}
       </UntaggedItemsDiv>

@@ -1,6 +1,6 @@
 use std::ops::Deref;
 
-use super::{Item, ItemEvent};
+use super::{Item, ItemEvent, Tag};
 use crate::{data::Data, AppState, StateVariant};
 use serde::{Deserialize, Serialize};
 use tauri::{command, State, Window};
@@ -18,6 +18,7 @@ pub struct Directory {
     pub id: String,
     pub title: String,
     is_open: bool,
+    tags: Vec<Tag>,
     columns: Vec<Column>,
     pub childrens: Vec<Item>,
 }
@@ -38,6 +39,7 @@ impl Directory {
             id: Uuid::new_v4().to_string(),
             title: "".into(),
             is_open: false,
+            tags: Vec::new(),
             columns: Vec::new(),
             childrens: Vec::new(),
         }

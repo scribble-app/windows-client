@@ -1,4 +1,4 @@
-use super::{Item, ItemEvent};
+use super::{Item, ItemEvent, Tag};
 use crate::{
     data::{Data, DATA_DIRECTORY_NAME, LOCAL_DIRECTORY_NAME},
     AppState, StateVariant,
@@ -15,20 +15,6 @@ use std::{
 };
 use tauri::{command, State, Window};
 use uuid::Uuid;
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-struct Color {
-    red: u8,
-    green: u8,
-    blue: u8,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-struct Tag {
-    id: String,
-    title: String,
-    color: Color,
-}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Progress {

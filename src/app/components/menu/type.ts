@@ -1,13 +1,8 @@
-interface Color {
-  red: number;
-  green: number;
-  blue: number;
-}
-
 interface Tag {
   id: string;
   title: string;
-  color: Color;
+  color: string;
+  is_belong_column: boolean;
 }
 
 interface Progress {
@@ -35,6 +30,7 @@ interface Dir {
   id: string;
   title: string;
   is_open: boolean;
+  tags: Tag[];
   columns: Column[];
   childrens: Item[];
 }

@@ -12,7 +12,10 @@ const DirectorySmallItem = (props: Props) => {
   const router = useRouter();
 
   return (
-    <SmallItemButton onClick={() => router.push(`/directory?id=${dir.id}`)}>
+    <SmallItemButton
+      draggable={true}
+      onClick={() => router.push(`/directory?id=${dir.id}`)}
+    >
       <DirectoryIcon />
       <SmallItemTitleText>
         {dir.title === "" ? "unnamed" : dir.title}

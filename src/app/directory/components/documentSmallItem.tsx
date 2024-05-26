@@ -12,7 +12,10 @@ const DocumentSmallItem = (props: Props) => {
   const router = useRouter();
 
   return (
-    <SmallItemButton onClick={() => router.push(`/document?id=${doc.id}`)}>
+    <SmallItemButton
+      draggable={true}
+      onClick={() => router.push(`/document?id=${doc.id}`)}
+    >
       <DocumentIcon />
       <SmallItemTitleText>
         {doc.title === "" ? "unnamed" : doc.title}
