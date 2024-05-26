@@ -32,8 +32,8 @@ const CreateColumnItem = (props: Props) => {
     e.preventDefault();
     if (isAcitve && title !== "") {
       invoke<Column[]>("add_column", { title, color })
-        .then((result) => setColumns(result))
-        .catch((error) => console.error(error));
+        .then(setColumns)
+        .catch(console.error);
       setTitle("");
       setIsActive(false);
       return;

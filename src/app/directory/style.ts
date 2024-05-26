@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { MainText, TitleText } from "../styles/globalStyles";
+import { color } from "framer-motion";
 
 export const DirectoryInfoDiv = styled.div`
   height: 120px;
@@ -86,6 +87,7 @@ export const ColorPickerInput = styled.input`
 `;
 
 export const ColumnSubmitForm = styled.form`
+  width: fit-content;
   display: flex;
   padding: 6px;
   justify-content: center;
@@ -94,6 +96,44 @@ export const ColumnSubmitForm = styled.form`
   border-radius: 10px;
   border: 1px solid ${(props) => props.theme.colors.gray100};
   background: ${(props) => props.theme.colors.black50};
+`;
+
+export const ColumnsContainerDiv = styled.div`
+  display: flex;
+`;
+
+export const ColumnDiv = styled.div<{ $color: string }>`
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  gap: 10px;
+  border-radius: 8px;
+  background-color: ${(props) => props.$color}33;
+`;
+
+export const ColumnTitleDiv = styled.div<{ $color: string }>`
+  display: flex;
+  width: 120px;
+  justify-content: space-between;
+
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+
+    path {
+      fill: ${(props) => props.$color};
+    }
+  }
+`;
+
+export const ColumnTitleText = styled(MainText)<{ $color: string }>`
+  font-size: 16px;
+  color: ${(props) => props.$color};
 `;
 
 export const UntaggedItemsDiv = styled.div`

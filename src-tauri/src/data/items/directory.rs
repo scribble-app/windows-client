@@ -1,10 +1,7 @@
 use std::ops::Deref;
 
 use super::{Item, ItemEvent};
-use crate::{
-    data::{self, Data},
-    AppState, StateVariant,
-};
+use crate::{data::Data, AppState, StateVariant};
 use serde::{Deserialize, Serialize};
 use tauri::{command, State, Window};
 use uuid::Uuid;
@@ -180,6 +177,40 @@ pub fn add_column(
             Err("Directory not found".to_string())
         }
         return match add(&mut data, &column, &id) {
+            Ok(result) => {
+                Data::write(data);
+                Ok(result)
+            }
+            Err(error) => Err(error),
+        };
+    }
+    Err("Incorrect state".to_string())
+}
+
+#[command]
+pub fn remove_column(column_id: String, state: State<AppState>) -> Result<Vec<Column>, String> {
+    if let StateVariant::Directory(id) = state.state.lock().unwrap().deref() {
+        let mut data = Data::read();
+
+        fn remove(
+            childrens: &mut Vec<Item>,
+            id: &str,
+            column_id: &str,
+        ) -> Result<Vec<Column>, String> {
+            for child in childrens {
+                if let Item::Directory(dir) = child {
+                    if dir.id == id {
+                        dir.columns.retain(|column| column.id != column_id);
+                        return Ok(dir.columns.clone());
+                    } else if let Ok(resutl) = remove(&mut dir.childrens, id, column_id) {
+                        return Ok(resutl);
+                    }
+                }
+            }
+            Err("Directory not found".to_string())
+        }
+
+        return match remove(&mut data, &id, &column_id) {
             Ok(result) => {
                 Data::write(data);
                 Ok(result)

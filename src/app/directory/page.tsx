@@ -5,6 +5,7 @@ import { MainBlockDiv } from "../styles/globalStyles";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useEffect, useState } from "react";
 import {
+  ColumnsContainerDiv,
   ColumnsDiv,
   DirectoryInfoDiv,
   DirectoryTitleInput,
@@ -14,6 +15,7 @@ import useDirectoryTitleState from "@/hooks/useDitectoryTitleState";
 import DocumentSmallItem from "./components/documentSmallItem";
 import DirectorySmallItem from "./components/directorySmallItem";
 import CreateColumnItem from "./components/createColumnItem";
+import ColumnItem from "./components/columnItem";
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -42,9 +44,15 @@ const Page = () => {
       </DirectoryInfoDiv>
       <ColumnsDiv>
         <CreateColumnItem searchParams={searchParams} setColumns={setColumns} />
-        {columns.map((column) => (
-          <h1>{column.title}</h1>
-        ))}
+        <ColumnsContainerDiv>
+          {columns.map((column) => (
+            <ColumnItem
+              key={column.id}
+              column={column}
+              setColumns={setColumns}
+            />
+          ))}
+        </ColumnsContainerDiv>
       </ColumnsDiv>
       <UntaggedItemsDiv>
         {childrens.map((child) => {

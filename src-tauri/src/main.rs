@@ -6,7 +6,8 @@ use data::{
     get_items, get_state,
     items::{
         directory::{
-            add_column, create_directory, get_directory, set_title, toggle_open_directory,
+            add_column, create_directory, get_directory, remove_column, set_title,
+            toggle_open_directory,
         },
         document::{create_document, get_document, write_document},
         get_title, item_move, remove_current,
@@ -54,6 +55,7 @@ fn main() {
             get_directory,
             set_title,
             add_column,
+            remove_column,
             toggle_open_directory,
             item_move,
             remove_current
