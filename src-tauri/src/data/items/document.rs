@@ -227,3 +227,84 @@ pub fn write_document(content: String, state: State<AppState>, window: Window) -
         "none".into()
     }
 }
+
+pub fn create_example_md() {
+    let mut data = Data::read();
+
+    for item in &data {
+        if let Item::Document(doc) = item {
+            if doc.id == "test" {
+                return;
+            }
+        }
+    }
+
+    let mut document = Document::new();
+
+    document.id = "test".to_string();
+
+    let mut file = File::create(
+        Path::new(&env::var("LOCALAPPDATA").unwrap())
+            .join(LOCAL_DIRECTORY_NAME)
+            .join(DATA_DIRECTORY_NAME)
+            .join(&document.id),
+    )
+    .unwrap();
+
+    let content = "
+# Title (Heading)
+
+description description description
+
+## Heading 2
+
+### Heading 3
+
+| table | table | table | table | table |
+| ----- | ----- | ----- | ----- | ----- |
+| 1     | 2     | 3     | 4     | 5     |
+| 6     | 7     |       |       |       |
+|       |       |       |       |       |
+
+**wadahell**
+
+_italicized text_
+
+> blockquote
+
+1. First item
+2. Second item
+3. Third item
+
+- First item
+- Second item
+- Third item
+
+```python
+print(\"hello world!\")
+```
+
+---
+
+[link](https://www.example.com)
+
+- [x] Write the press release
+- [ ] Update the website
+- [ ] Contact the media
+
+![](https://i.imgur.com/lUeDDae.jpg)
+        "
+    .to_string();
+
+    document.title = content.get_title();
+    document.description = content.get_description();
+    document.progress = content.get_progress();
+
+    let serialized_content = serialize(&content).unwrap();
+    let buf = serialized_content.as_slice();
+
+    file.write_all(buf).unwrap();
+
+    data.push(Item::Document(document));
+    Data::write(data);
+}

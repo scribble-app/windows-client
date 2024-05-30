@@ -19,6 +19,8 @@ use std::sync::Mutex;
 use tauri::{generate_context, generate_handler, Manager};
 use window_shadows::set_shadow;
 
+use crate::data::items::document::create_example_md;
+
 #[derive(Serialize)]
 enum StateVariant {
     None,
@@ -32,6 +34,7 @@ struct AppState {
 
 fn main() {
     Data::initialization();
+    create_example_md();
     println!("{:#?}", Data::read());
 
     tauri::Builder::default()
