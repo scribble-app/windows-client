@@ -14,9 +14,9 @@ export const HeaderContainerDiv = styled.div`
   text-align: center;
 `;
 
-export const HeaderTitleText = styled.h2`
+export const HeaderTitleText = styled.h2<{ $fontScale: number }>`
   margin: 0;
-  font-size: 15px;
+  font-size: ${(props) => 15 + props.$fontScale}px;
   font-weight: 400;
   color: ${(props) => props.theme.colors.white};
 `;
@@ -72,7 +72,7 @@ export const HeaderViewButton = styled.button`
   }
 `;
 
-export const HeaderViewMiddleButton = styled(HeaderViewButton) <{
+export const HeaderViewMiddleButton = styled(HeaderViewButton)<{
   $active?: boolean;
 }>`
   background-color: transparent;
@@ -82,6 +82,6 @@ export const HeaderViewMiddleButton = styled(HeaderViewButton) <{
   align-items: center;
   path {
     fill: ${(props) =>
-    props.$active ? props.theme.colors.white : props.theme.colors.gray50};
+      props.$active ? props.theme.colors.white : props.theme.colors.gray50};
   }
 `;

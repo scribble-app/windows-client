@@ -78,4 +78,14 @@ export const PreviewWindow = styled.div`
   pre {
     background-color: ${(props) => props.theme.colors.black70};
   }
+
+  table {
+    tr {
+      background-color: ${(props) => props.theme.colors.black70};
+    }
+
+    tr:nth-child(2n) {
+      background-color: ${(props) => props.theme.colors.black50};
+    }
+  }
 `;

@@ -56,11 +56,11 @@ export const MainPageButtonsContainerDiv = styled.div`
   }
 `;
 
-export const MainPageButton = styled.button`
+export const MainPageButton = styled.button<{ $fontScale: number }>`
   border: none;
   padding: 8px 16px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: ${(props) => 13 + props.$fontScale}px;
   font-weight: 400;
   cursor: pointer;
   color: ${(props) => props.theme.colors.white};

@@ -1,7 +1,7 @@
 "use client";
 
 import { WebviewWindow } from "@tauri-apps/api/window";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   EventButtonsDiv,
   LeftSideDiv,
@@ -16,8 +16,10 @@ import { MenuItemType } from "./type";
 import MenuItem from "./components/menuItem";
 import { useRouter, useSearchParams } from "next/navigation";
 import shortcuts from "./shortcuts";
+import FontScaleContext from "@/contexts/fontScaleContext";
 
 const Title = () => {
+  const { fontScale } = useContext(FontScaleContext);
   const [appWindow, setAppWindow] = useState<WebviewWindow>();
   const [activeIndex, setActiveIndex] = useState(-1);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -51,7 +53,9 @@ const Title = () => {
   return (
     <TitleBarHeader data-tauri-drag-region>
       <LeftSideDiv>
-        <TitleBarText data-tauri-drag-region>Scribble</TitleBarText>
+        <TitleBarText data-tauri-drag-region $fontScale={fontScale}>
+          Scribble
+        </TitleBarText>
         <div ref={menuRef}>
           {navigation.map((item: MenuItemType, index: number) => (
             <MenuItem

@@ -8,11 +8,14 @@ use std::{
 };
 use tauri::{command, State};
 
+pub mod dictionary;
 pub mod items;
 pub mod settings;
 use crate::{AppState, StateVariant};
 use items::Item;
 use settings::Settings;
+
+use self::items::directory;
 
 const DATA_NAME: &str = "data";
 const SETTINGS_NAME: &str = "config";

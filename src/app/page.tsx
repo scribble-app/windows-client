@@ -10,19 +10,29 @@ import {
 } from "./styles/style";
 import createDirectory from "@/functions/createDirectory";
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
+import FontScaleContext from "@/contexts/fontScaleContext";
 
 const Home = () => {
   const router = useRouter();
+
+  const { fontScale } = useContext(FontScaleContext);
 
   return (
     <MainPageDiv>
       <MainInfoBlockDiv>
         <TitleText>How to start work</TitleText>
         <MainPageButtonsContainerDiv>
-          <MainPageButton onClick={() => createDocument(router)}>
+          <MainPageButton
+            onClick={() => createDocument(router)}
+            $fontScale={fontScale}
+          >
             Create file Ctrl+N
           </MainPageButton>
-          <MainPageButton onClick={() => createDirectory(router)}>
+          <MainPageButton
+            onClick={() => createDirectory(router)}
+            $fontScale={fontScale}
+          >
             Create directory Ctrl+Shift+N
           </MainPageButton>
         </MainPageButtonsContainerDiv>

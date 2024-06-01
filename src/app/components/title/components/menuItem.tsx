@@ -1,7 +1,8 @@
+import FontScaleContext from "@/contexts/fontScaleContext";
 import { TitleButtonDiv } from "../style";
 import { MenuItemType } from "../type";
 import DropDownMenu from "./dropDownMenu";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 
 interface Props {
   item: MenuItemType;
@@ -20,6 +21,8 @@ const MenuItem = ({
   setActiveIndex,
   onMenuClick,
 }: Props) => {
+  const { fontScale } = useContext(FontScaleContext);
+
   return (
     <TitleButtonDiv
       key={index}
@@ -36,6 +39,7 @@ const MenuItem = ({
       }}
       onMouseEnter={() => activeIndex !== -1 && onMenuClick(index)}
       {...(isActive && { $active: true })}
+      $fontScale={fontScale}
     >
       {item.name}
       <DropDownMenu

@@ -1,4 +1,4 @@
-import { DragEvent, KeyboardEvent, MouseEvent } from "react";
+import { DragEvent, KeyboardEvent, MouseEvent, useContext } from "react";
 import DropIndicator from "./dropIndicator";
 import {
   DirectoryArrowButton,
@@ -11,6 +11,7 @@ import {
 import { ArrowIcon, DirectoryIcon } from "@/app/styles/icons";
 import DocumentItem from "./documentItem";
 import { useRouter } from "next/navigation";
+import FontScaleContext from "@/contexts/fontScaleContext";
 
 interface Props {
   dir: Dir;
@@ -24,6 +25,8 @@ interface Props {
 
 const DirectoryItem = (props: Props) => {
   const { dir, currentId, handleDragStart, setIsOpen } = props;
+
+  const { fontScale } = useContext(FontScaleContext);
 
   const router = useRouter();
 
@@ -59,7 +62,7 @@ const DirectoryItem = (props: Props) => {
         >
           <DirectoryLeftDiv>
             <DirectoryIcon />
-            <DirectoryTitleText>
+            <DirectoryTitleText $fontScale={fontScale}>
               {dir.title === "" ? "unnamed" : dir.title}
             </DirectoryTitleText>
           </DirectoryLeftDiv>

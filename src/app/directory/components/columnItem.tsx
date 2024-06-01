@@ -5,11 +5,12 @@ import {
   ColumnTitleDiv,
   ColumnTitleText,
 } from "../style";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import ColumnDropIndicator from "./columnDropIndicator";
 import DocumentSmallItem from "./documentSmallItem";
 import DirectorySmallItem from "./directorySmallItem";
+import FontScaleContext from "@/contexts/fontScaleContext";
 
 interface Props {
   column: Column;
@@ -20,6 +21,8 @@ interface Props {
 const ColumnItem = (props: Props) => {
   const { column, childrens, setColumns } = props;
 
+  const { fontScale } = useContext(FontScaleContext);
+
   const clikcRemove = () => {
     invoke<Column[]>("remove_column", { columnId: column.id })
       .then(setColumns)
@@ -29,7 +32,9 @@ const ColumnItem = (props: Props) => {
   return (
     <ColumnDiv $color={column.color}>
       <ColumnTitleDiv $color={column.color}>
-        <ColumnTitleText $color={column.color}>{column.title}</ColumnTitleText>
+        <ColumnTitleText $color={column.color} $fontScale={fontScale}>
+          {column.title}
+        </ColumnTitleText>
         <button onClick={() => clikcRemove()}>
           <TrashIcon />
         </button>

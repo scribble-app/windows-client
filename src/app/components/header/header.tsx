@@ -16,6 +16,7 @@ import { ViewMode } from "@/type";
 import HintWrapper from "../hintWrapper/hintWrapper";
 import { listen } from "@tauri-apps/api/event";
 import { ArrowIconForwardBack } from "@/app/styles/icons";
+import FontScaleContext from "@/contexts/fontScaleContext";
 
 interface ItemEvent {
   status: string;
@@ -23,6 +24,7 @@ interface ItemEvent {
 
 const Header = () => {
   const { viewMode, setViewMode } = useContext(ViewModeContext);
+  const { fontScale } = useContext(FontScaleContext);
 
   const pathname = usePathname();
   const router = useRouter();
@@ -74,7 +76,9 @@ const Header = () => {
             </HeaderArrowButton>
           </HintWrapper>
         </HeaderButtonsDiv>
-        <HeaderTitleText>{title && title}</HeaderTitleText>
+        <HeaderTitleText $fontScale={fontScale}>
+          {title && title}
+        </HeaderTitleText>
         {pathname === "/document" && (
           <HeaderButtonsDiv>
             <HintWrapper

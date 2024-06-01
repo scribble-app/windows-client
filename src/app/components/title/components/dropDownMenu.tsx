@@ -1,7 +1,8 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { DropDownItemType } from "../type";
 import { TitleDropDownItemButton, TitleDropDownMenuDiv } from "../style";
 import { useRouter, useSearchParams } from "next/navigation";
+import FontScaleContext from "@/contexts/fontScaleContext";
 
 interface Props {
   list: DropDownItemType[];
@@ -12,6 +13,7 @@ interface Props {
 const DropDownMenu = ({ list, isActive, setActiveIndex }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { fontScale } = useContext(FontScaleContext);
 
   if (isActive) {
     return (
@@ -24,6 +26,7 @@ const DropDownMenu = ({ list, isActive, setActiveIndex }: Props) => {
               event.stopPropagation();
               setActiveIndex(-1);
             }}
+            $fontScale={fontScale}
           >
             <span>{item.name}</span>
             {item.shortcut.text !== "" && <span>{item.shortcut.text}</span>}

@@ -6,6 +6,7 @@ import ThemeWrapper from "./styles/themeWrapper";
 import AppWrapper from "./appWrapper";
 import Title from "./components/title/title";
 import { Suspense } from "react";
+import SettingsWrapper from "./settingsWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,8 +27,10 @@ export default function RootLayout({
           <GlobalStyles />
           <ThemeWrapper>
             <Suspense>
-              <Title />
-              <AppWrapper>{children}</AppWrapper>
+              <SettingsWrapper>
+                <Title />
+                <AppWrapper>{children}</AppWrapper>
+              </SettingsWrapper>
             </Suspense>
           </ThemeWrapper>
         </StyledComponentsRegistry>

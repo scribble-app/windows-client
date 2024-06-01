@@ -10,12 +10,14 @@ import {
   Dispatch,
   FormEvent,
   SetStateAction,
+  useContext,
   useEffect,
   useState,
 } from "react";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { invoke } from "@tauri-apps/api/tauri";
 import HintWrapper from "@/app/components/hintWrapper/hintWrapper";
+import FontScaleContext from "@/contexts/fontScaleContext";
 
 interface Props {
   searchParams: ReadonlyURLSearchParams;
@@ -24,6 +26,8 @@ interface Props {
 
 const CreateColumnItem = (props: Props) => {
   const { searchParams, setColumns } = props;
+
+  const { fontScale } = useContext(FontScaleContext);
 
   const [isAcitve, setIsActive] = useState(false);
   const [title, setTitle] = useState("");
@@ -55,6 +59,7 @@ const CreateColumnItem = (props: Props) => {
             placeholder="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            $fontScale={fontScale}
           />
           <ColorPickerInput
             type="color"
@@ -64,7 +69,7 @@ const CreateColumnItem = (props: Props) => {
         </>
       )}
       <HintWrapper hint="Create column">
-        <ColumnSubmitButton>
+        <ColumnSubmitButton $fontScale={fontScale}>
           {isAcitve && <MainText>Submit</MainText>}
           <CrossIcon />
         </ColumnSubmitButton>

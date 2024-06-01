@@ -18,21 +18,24 @@ export const LeftSideDiv = styled.div`
   gap: 10px;
 `;
 
-export const TitleBarText = styled.h1`
+export const TitleBarText = styled.h1<{ $fontScale: number }>`
   color: ${(props) => props.theme.colors.white};
-  font-size: 13px;
+  font-size: ${(props) => 13 + props.$fontScale}px;
   font-weight: 400;
   margin: 0px;
   padding-left: 10px;
   user-select: none;
 `;
 
-export const TitleButtonDiv = styled.div<{ $active?: boolean }>`
+export const TitleButtonDiv = styled.div<{
+  $active?: boolean;
+  $fontScale: number;
+}>`
   position: relative;
   display: inline-block;
   text-decoration: none;
   color: ${(props) => props.theme.colors.white};
-  font-size: 13px;
+  font-size: ${(props) => 13 + props.$fontScale}px;
   font-weight: 400;
   padding: 3px 6px;
   border: none;
@@ -59,12 +62,12 @@ export const TitleDropDownMenuDiv = styled.div`
   z-index: 1;
 `;
 
-export const TitleDropDownItemButton = styled.button`
+export const TitleDropDownItemButton = styled.button<{ $fontScale: number }>`
   display: flex;
   justify-content: space-between;
   margin: 0px;
   padding: 4px 8px;
-  font-size: 13px;
+  font-size: ${(props) => 13 + props.$fontScale}px;
   font-weight: 400;
   text-decoration: none;
   color: ${(props) => props.theme.colors.white};

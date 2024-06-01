@@ -1,4 +1,4 @@
-import { DragEvent } from "react";
+import { DragEvent, useContext } from "react";
 import {
   DocumentButton,
   DocumentDescriptionText,
@@ -14,7 +14,7 @@ import { ClockIcon, DocumentIcon } from "@/app/styles/icons";
 import getTime from "@/utils/getTime";
 import DropIndicator from "./dropIndicator";
 import { useRouter } from "next/navigation";
-import HintWrapper from "../../hintWrapper/hintWrapper";
+import FontScaleContext from "@/contexts/fontScaleContext";
 
 interface Props {
   doc: Doc;
@@ -27,6 +27,7 @@ interface Props {
 
 const DocumentItem = (props: Props) => {
   const { doc, currentId, handleDragStart } = props;
+  const { fontScale } = useContext(FontScaleContext);
   const router = useRouter();
 
   return (
@@ -41,14 +42,15 @@ const DocumentItem = (props: Props) => {
         <RowDiv>
           <DocumentLeftDiv>
             <DocumentIcon />
-            <DocumentTitleText>
+            <DocumentTitleText $fontScale={fontScale}>
               {doc.title === "" ? "unnamed" : doc.title}
             </DocumentTitleText>
           </DocumentLeftDiv>
           {doc.progress.maximum > 0 && (
-            <ProgressBlockDiv>
+            <ProgressBlockDiv $fontScale={fontScale}>
               <ProgressLineDiv
                 $width={(100 / doc.progress.maximum) * doc.progress.current}
+                $fontScale={fontScale}
               />
             </ProgressBlockDiv>
           )}
@@ -56,12 +58,14 @@ const DocumentItem = (props: Props) => {
         <RowDiv>
           <TimeBlockDiv>
             <ClockIcon />
-            <DocumentTimeText>{getTime(doc.updated_at)}</DocumentTimeText>
+            <DocumentTimeText $fontScale={fontScale}>
+              {getTime(doc.updated_at)}
+            </DocumentTimeText>
           </TimeBlockDiv>
         </RowDiv>
         <div></div>
         <RowDiv>
-          <DocumentDescriptionText>
+          <DocumentDescriptionText $fontScale={fontScale}>
             {doc.description === "" ? "undefined" : doc.description}
           </DocumentDescriptionText>
         </RowDiv>

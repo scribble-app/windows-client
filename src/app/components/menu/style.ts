@@ -28,9 +28,9 @@ export const SearchBoxDiv = styled.div`
   }
 `;
 
-export const SearchInput = styled.input`
+export const SearchInput = styled.input<{ $fontScale: number }>`
   background-color: transparent;
-  font-size: 13px;
+  font-size: ${(props) => 13 + props.$fontScale}px;
   color: ${(props) => props.theme.colors.white};
   width: 100%;
   border: none;
@@ -88,20 +88,20 @@ export const DocumentLeftDiv = styled.div`
   }
 `;
 
-export const DocumentTitleText = styled(MainText)`
-  font-size: 16px;
+export const DocumentTitleText = styled(MainText)<{ $fontScale: number }>`
+  font-size: ${(props) => 16 + props.$fontScale}px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 `;
 
-export const DocumentTimeText = styled(MainText)`
-  font-size: 12px;
+export const DocumentTimeText = styled(MainText)<{ $fontScale: number }>`
+  font-size: ${(props) => 12 + props.$fontScale}px;
   margin: 0px;
 `;
 
-export const DocumentDescriptionText = styled(MainText)`
-  font-size: 12px;
+export const DocumentDescriptionText = styled(MainText)<{ $fontScale: number }>`
+  font-size: ${(props) => 12 + props.$fontScale}px;
   margin: 0px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -109,10 +109,10 @@ export const DocumentDescriptionText = styled(MainText)`
   color: ${(props) => props.theme.colors.gray50};
 `;
 
-export const ProgressBlockDiv = styled.div`
+export const ProgressBlockDiv = styled.div<{ $fontScale: number }>`
   display: flex;
   width: 50px;
-  height: 4px;
+  height: ${(props) => 4 + props.$fontScale}px;
   padding: 0px 1px;
   justify-content: flex-start;
   align-items: center;
@@ -120,14 +120,15 @@ export const ProgressBlockDiv = styled.div`
   background-color: ${(props) => props.theme.colors.black50};
 `;
 
-export const ProgressLineDiv = styled.div.attrs<{ $width: number }>(
-  (props) => ({
-    style: {
-      width: `${props.$width}%`,
-    },
-  }),
-)`
-  height: 2px;
+export const ProgressLineDiv = styled.div.attrs<{
+  $width: number;
+  $fontScale: number;
+}>((props) => ({
+  style: {
+    width: `${props.$width}%`,
+  },
+}))`
+  height: ${(props) => 2 + props.$fontScale}px;
   border-radius: 4px;
   background-color: ${(props) => props.theme.colors.white};
 `;
@@ -198,8 +199,8 @@ export const DirectoryLeftDiv = styled.div`
   white-space: nowrap;
 `;
 
-export const DirectoryTitleText = styled(MainText)`
-  font-size: 16px;
+export const DirectoryTitleText = styled(MainText)<{ $fontScale: number }>`
+  font-size: ${(props) => 16 + props.$fontScale}px;
   margin: 0px;
   user-select: none;
   text-overflow: ellipsis;

@@ -1,6 +1,6 @@
 use super::{Item, ItemEvent, Tag};
 use crate::{
-    data::{Data, DATA_DIRECTORY_NAME, LOCAL_DIRECTORY_NAME},
+    data::{dictionary, Data, DATA_DIRECTORY_NAME, LOCAL_DIRECTORY_NAME},
     AppState, StateVariant,
 };
 use bincode::{deserialize, serialize};
@@ -307,4 +307,11 @@ print(\"hello world!\")
 
     data.push(Item::Document(document));
     Data::write(data);
+}
+
+#[command]
+pub fn check_word(word: String, state: State<AppState>) -> bool {
+    let dictionary = state.dictionary.lock().unwrap();
+    println!("{}", dictionary.contains(&word.to_ascii_lowercase()));
+    dictionary.contains(&word.to_ascii_lowercase())
 }

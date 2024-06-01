@@ -19,7 +19,8 @@ import { tags } from "@lezer/highlight";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
 import { oneDark } from "@codemirror/theme-one-dark";
-import { vim, Vim } from "@replit/codemirror-vim";
+import spellCheckPlugin from "@/utils/spellCheckPlugin";
+// import { vim, Vim } from "@replit/codemirror-vim";
 
 interface Props {
   initialDoc: string;
@@ -63,7 +64,7 @@ const useCodeMirror = <T extends Element>(
     const startState = EditorState.create({
       doc: props.initialDoc,
       extensions: [
-        vim(),
+        // vim(),
         keymap.of([...defaultKeymap, ...historyKeymap]),
         lineNumbers(),
         highlightActiveLineGutter(),
@@ -79,6 +80,7 @@ const useCodeMirror = <T extends Element>(
         }),
         oneDark,
         transparentTheme,
+        spellCheckPlugin,
         syntaxHighlighting(syntaxHighlightingCustom),
         EditorView.lineWrapping,
         EditorView.updateListener.of((update) => {
@@ -89,7 +91,7 @@ const useCodeMirror = <T extends Element>(
       ],
     });
 
-    Vim.map(":", "<Esc>");
+    // Vim.map(":", "<Esc>");
 
     const view = new EditorView({
       state: startState,

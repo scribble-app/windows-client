@@ -1,4 +1,4 @@
-import { DragEvent, useEffect, useState } from "react";
+import { DragEvent, useContext, useEffect, useState } from "react";
 import {
   ListContainerDiv,
   MenuContainerDiv,
@@ -13,6 +13,7 @@ import { theme } from "@/app/styles/globalStyles";
 import { SearchIcon } from "@/app/styles/icons";
 import { useSearchParams } from "next/navigation";
 import { listen } from "@tauri-apps/api/event";
+import FontScaleContext from "@/contexts/fontScaleContext";
 
 interface Props {
   width: number;
@@ -24,6 +25,8 @@ interface ItemEvent {
 
 const Menu = (props: Props) => {
   const { width } = props;
+
+  const { fontScale } = useContext(FontScaleContext);
 
   const searchParams = useSearchParams();
 
@@ -192,6 +195,7 @@ const Menu = (props: Props) => {
             placeholder="Type to search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            $fontScale={fontScale}
           />
         </SearchBoxDiv>
         <ListContainerDiv

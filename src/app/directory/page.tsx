@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { MainBlockDiv } from "../styles/globalStyles";
 import { invoke } from "@tauri-apps/api/tauri";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   ColumnsContainerDiv,
   ColumnsDiv,
@@ -16,10 +16,12 @@ import DocumentSmallItem from "./components/documentSmallItem";
 import DirectorySmallItem from "./components/directorySmallItem";
 import CreateColumnItem from "./components/createColumnItem";
 import ColumnItem from "./components/columnItem";
-import { tags } from "@lezer/highlight";
+import FontScaleContext from "@/contexts/fontScaleContext";
 
 const Page = () => {
   const searchParams = useSearchParams();
+
+  const { fontScale } = useContext(FontScaleContext);
 
   const [title, setTitle] = useDirectoryTitleState(searchParams);
   const [childrens, setChildrens] = useState<Item[]>([]);
@@ -41,6 +43,7 @@ const Page = () => {
         <DirectoryTitleInput
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          $fontScale={fontScale}
         />
       </DirectoryInfoDiv>
       <ColumnsDiv>

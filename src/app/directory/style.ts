@@ -14,8 +14,8 @@ export const DirectoryTitleText = styled(TitleText)`
   user-select: none;
 `;
 
-export const DirectoryTitleInput = styled.input`
-  font-size: 28px;
+export const DirectoryTitleInput = styled.input<{ $fontScale: number }>`
+  font-size: ${(props) => 28 + props.$fontScale}px;
   font-weight: 700;
   color: ${(props) => props.theme.colors.white};
   transform: translate(32px, 102px);
@@ -35,7 +35,7 @@ export const ColumnsDiv = styled.div`
   gap: 6px;
 `;
 
-export const ColumnSubmitButton = styled.button`
+export const ColumnSubmitButton = styled.button<{ $fontScale: number }>`
   display: flex;
   padding: 6px;
   justify-content: center;
@@ -49,15 +49,20 @@ export const ColumnSubmitButton = styled.button`
   &:hover {
     background: ${(props) => props.theme.colors.black70};
   }
+
+  p {
+    font-size: ${(props) => 12 + props.$fontScale}px;
+  }
 `;
 
-export const ColumnInuput = styled.input`
+export const ColumnInuput = styled.input<{ $fontScale: number }>`
   display: flex;
   width: 120px;
   padding: 4px 6px;
   align-items: center;
   border: none;
   border-radius: 8px;
+  font-size: ${(props) => 12 + props.$fontScale}px;
   background: ${(props) => props.theme.colors.black70};
   color: ${(props) => props.theme.colors.white};
 
@@ -133,8 +138,11 @@ export const ColumnTitleDiv = styled.div<{ $color: string }>`
   }
 `;
 
-export const ColumnTitleText = styled(MainText)<{ $color: string }>`
-  font-size: 16px;
+export const ColumnTitleText = styled(MainText)<{
+  $color: string;
+  $fontScale: number;
+}>`
+  font-size: ${(props) => 16 + props.$fontScale}px;
   color: ${(props) => props.$color};
 `;
 
@@ -153,7 +161,7 @@ export const SmallItemButton = styled.button`
   display: flex;
   gap: 10px;
   align-items: center;
-  width: 160px;
+  min-width: 160px;
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
@@ -169,8 +177,8 @@ export const SmallItemButton = styled.button`
   }
 `;
 
-export const SmallItemTitleText = styled(MainText)`
-  font-size: 16px;
+export const SmallItemTitleText = styled(MainText)<{ $fontScale: number }>`
+  font-size: ${(props) => 16 + props.$fontScale}px;
 `;
 
 export const ColumnDropIndicatorDiv = styled.div`

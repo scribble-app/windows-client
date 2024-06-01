@@ -3,23 +3,22 @@
 mod data;
 
 use data::{
+    dictionary::Dictionary,
     get_items, get_state,
     items::{
         directory::{
             add_column, create_directory, get_directory, remove_column, set_title,
             toggle_open_directory,
         },
-        document::{create_document, get_document, write_document},
+        document::{check_word, create_document, create_example_md, get_document, write_document},
         get_title, item_move, remove_current,
     },
     Data,
 };
 use serde::Serialize;
-use std::sync::Mutex;
+use std::{collections::HashSet, sync::Mutex};
 use tauri::{generate_context, generate_handler, Manager};
 use window_shadows::set_shadow;
-
-use crate::data::items::document::create_example_md;
 
 #[derive(Serialize)]
 enum StateVariant {
@@ -30,6 +29,7 @@ enum StateVariant {
 
 struct AppState {
     state: Mutex<StateVariant>,
+    dictionary: Mutex<HashSet<String>>,
 }
 
 fn main() {
@@ -46,6 +46,7 @@ fn main() {
         })
         .manage(AppState {
             state: Mutex::new(StateVariant::None),
+            dictionary: Mutex::new(Dictionary::new()),
         })
         .invoke_handler(generate_handler![
             get_items,
@@ -61,7 +62,8 @@ fn main() {
             remove_column,
             toggle_open_directory,
             item_move,
-            remove_current
+            remove_current,
+            check_word
         ])
         .run(generate_context!())
         .expect("error while running tauri application");
