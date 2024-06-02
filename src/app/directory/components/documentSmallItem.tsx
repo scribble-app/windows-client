@@ -2,14 +2,15 @@ import { DocumentIcon } from "@/app/styles/icons";
 import { SmallItemButton, SmallItemTitleText } from "../style";
 import { useRouter } from "next/navigation";
 import FontScaleContext from "@/contexts/fontScaleContext";
-import { useContext } from "react";
+import { DragEvent, useContext } from "react";
 
 interface Props {
   doc: Doc;
+  handleDragStart: (e: DragEvent<HTMLButtonElement>, item: Item) => void;
 }
 
 const DocumentSmallItem = (props: Props) => {
-  const { doc } = props;
+  const { doc, handleDragStart } = props;
 
   const { fontScale } = useContext(FontScaleContext);
 
@@ -19,6 +20,7 @@ const DocumentSmallItem = (props: Props) => {
     <SmallItemButton
       draggable={true}
       onClick={() => router.push(`/document?id=${doc.id}`)}
+      onDragStart={(e) => handleDragStart(e, doc)}
     >
       <DocumentIcon />
       <SmallItemTitleText $fontScale={fontScale}>

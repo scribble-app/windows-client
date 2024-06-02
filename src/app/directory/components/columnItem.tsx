@@ -5,7 +5,7 @@ import {
   ColumnTitleDiv,
   ColumnTitleText,
 } from "../style";
-import { Dispatch, SetStateAction, useContext } from "react";
+import { Dispatch, DragEvent, SetStateAction, useContext } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import ColumnDropIndicator from "./columnDropIndicator";
 import DocumentSmallItem from "./documentSmallItem";
@@ -16,10 +16,22 @@ interface Props {
   column: Column;
   childrens: Item[];
   setColumns: Dispatch<SetStateAction<Column[]>>;
+  handleDragStart: (e: DragEvent<HTMLButtonElement>, item: Item) => void;
+  handleDragOver: (e: DragEvent<HTMLButtonElement>) => void;
+  handleDragLeave: () => void;
+  handleDragEnd: (e: DragEvent<HTMLButtonElement>) => void;
 }
 
 const ColumnItem = (props: Props) => {
-  const { column, childrens, setColumns } = props;
+  const {
+    column,
+    childrens,
+    setColumns,
+    handleDragStart,
+    handleDragOver,
+    handleDragLeave,
+    handleDragEnd,
+  } = props;
 
   const { fontScale } = useContext(FontScaleContext);
 
@@ -39,7 +51,11 @@ const ColumnItem = (props: Props) => {
           <TrashIcon />
         </button>
       </ColumnTitleDiv>
-      <ColumnItemsDiv>
+      <ColumnItemsDiv
+        onDrop={(e) => handleDragEnd(e as any)}
+        onDragOver={(e) => handleDragOver(e as any)}
+        onDragLeave={handleDragLeave}
+      >
         {childrens.map((item) => {
           if ("Document" in item) {
             const documentItem = item as { Document: Doc };
@@ -56,6 +72,7 @@ const ColumnItem = (props: Props) => {
                   <DocumentSmallItem
                     key={documentItem.Document.id}
                     doc={documentItem.Document}
+                    handleDragStart={handleDragStart}
                   />
                 </>
               );
@@ -75,6 +92,7 @@ const ColumnItem = (props: Props) => {
                   <DirectorySmallItem
                     key={directoryItem.Directory.id}
                     dir={directoryItem.Directory}
+                    handleDragStart={handleDragStart}
                   />
                 </>
               );

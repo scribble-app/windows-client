@@ -10,9 +10,10 @@ const ColumnDropIndicator = (props: Props) => {
 
   return (
     <ColumnDropIndicatorDiv
-      id="item-drop-indicatro"
+      id="item-drop-indicator"
       data-before={beforeId || "-1"}
       data-column={column}
+      style={{ opacity: 0 }}
     />
   );
 };

@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { MainBlockDiv } from "../styles/globalStyles";
 import { invoke } from "@tauri-apps/api/tauri";
-import { useContext, useEffect, useState } from "react";
+import { DragEvent, useContext, useEffect, useState } from "react";
 import {
   ColumnsContainerDiv,
   ColumnsDiv,
@@ -37,6 +37,61 @@ const Page = () => {
       .catch((error) => console.error(error));
   }, [searchParams]);
 
+  const handleDragStart = (e: DragEvent<HTMLButtonElement>, item: Item) => {
+    e.dataTransfer?.setData("itemId", item.id);
+  };
+
+  const handleDragOver = (e: DragEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    highlightIndicator(e);
+  };
+
+  const handleDragLeave = () => {};
+
+  const handleDragEnd = (e: DragEvent<HTMLButtonElement>) => {};
+
+  const highlightIndicator = (e: DragEvent<HTMLButtonElement>) => {
+    const indicators = getIdicators();
+    const el = getNearestIndicator(e, indicators);
+
+    el.element.style.opacity = "1";
+  };
+
+  const getNearestIndicator = (
+    e: DragEvent<HTMLButtonElement>,
+    indicators: HTMLElement[],
+  ) => {
+    const DISTANCE_OFFSET = 50;
+
+    const el = indicators.reduce(
+      (closest, child) => {
+        const box = child.getBoundingClientRect();
+
+        const offset = e.clientY - (box.top + DISTANCE_OFFSET);
+
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      },
+      {
+        offset: Number.NEGATIVE_INFINITY,
+        element: indicators[indicators.length - 1],
+      },
+    );
+
+    return el;
+  };
+
+  const getIdicators = () => {
+    return Array.from(
+      document.querySelectorAll(
+        "#item-drop-indicator",
+      ) as unknown as HTMLElement[],
+    );
+  };
+
   return (
     <MainBlockDiv>
       <DirectoryInfoDiv>
@@ -55,6 +110,10 @@ const Page = () => {
               column={column}
               childrens={childrens}
               setColumns={setColumns}
+              handleDragStart={handleDragStart}
+              handleDragOver={handleDragOver}
+              handleDragLeave={handleDragLeave}
+              handleDragEnd={handleDragEnd}
             />
           ))}
         </ColumnsContainerDiv>
@@ -72,6 +131,7 @@ const Page = () => {
                 <DocumentSmallItem
                   key={documentItem.Document.id}
                   doc={documentItem.Document}
+                  handleDragStart={handleDragStart}
                 />
               );
             }
@@ -86,6 +146,7 @@ const Page = () => {
                 <DirectorySmallItem
                   key={directoryItem.Directory.id}
                   dir={directoryItem.Directory}
+                  handleDragStart={handleDragStart}
                 />
               );
             }

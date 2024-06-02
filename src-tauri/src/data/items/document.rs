@@ -252,47 +252,33 @@ pub fn create_example_md() {
     .unwrap();
 
     let content = "
-# Title (Heading)
-
-description description description
+    # Heading
 
 ## Heading 2
 
 ### Heading 3
 
-| table | table | table | table | table |
-| ----- | ----- | ----- | ----- | ----- |
-| 1     | 2     | 3     | 4     | 5     |
-| 6     | 7     |       |       |       |
-|       |       |       |       |       |
-
-**wadahell**
-
-_italicized text_
-
-> blockquote
-
-1. First item
-2. Second item
-3. Third item
-
-- First item
-- Second item
-- Third item
-
-```python
-print(\"hello world!\")
-```
-
----
-
-[link](https://www.example.com)
+| Syntax      | Description |
+| ----------- | ----------- |
+| Header      | Title       |
+| Paragraph   | Text        |
 
 - [x] Write the press release
 - [ ] Update the website
 - [ ] Contact the media
 
+```rust
+fn complete_collage(&self, grade: u32) -> bool {
+  grade > 4
+}
+```
+
 ![](https://i.imgur.com/lUeDDae.jpg)
+
+
+
+
+
         "
     .to_string();
 
@@ -312,6 +298,5 @@ print(\"hello world!\")
 #[command]
 pub fn check_word(word: String, state: State<AppState>) -> bool {
     let dictionary = state.dictionary.lock().unwrap();
-    println!("{}", dictionary.contains(&word.to_ascii_lowercase()));
     dictionary.contains(&word.to_ascii_lowercase())
 }

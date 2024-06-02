@@ -32,6 +32,9 @@ const transparentTheme = EditorView.theme({
     backgroundColor: "transparent !important",
     height: "100%",
   },
+  ".misspelled": {
+    textDecoration: "underline wavy red",
+  },
 });
 
 const syntaxHighlightingCustom = HighlightStyle.define([
