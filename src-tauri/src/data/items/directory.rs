@@ -225,8 +225,8 @@ pub fn remove_column(
                         dir.columns.retain(|column| column.id != column_id);
 
                         return Ok(dir.columns.clone());
-                    } else if let Ok(результ) = remove(&mut dir.childrens, id, column_id) {
-                        return Ok(результ);
+                    } else if let Ok(result) = remove(&mut dir.childrens, id, column_id) {
+                        return Ok(result);
                     }
                 }
             }

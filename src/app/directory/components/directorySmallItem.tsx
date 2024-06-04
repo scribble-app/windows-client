@@ -18,7 +18,6 @@ const DirectorySmallItem = (props: Props) => {
 
   return (
     <SmallItemButton
-      draggable={true}
       onClick={() => router.push(`/directory?id=${dir.id}`)}
       onDragStart={(e) => handleDragStart(e, dir)}
     >

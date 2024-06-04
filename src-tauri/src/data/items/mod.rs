@@ -103,8 +103,6 @@ pub fn rearange_column(
                                         }
 
                                         if let (Some(pos1), Some(pos2)) = (pos1, pos2) {
-                                            println!("{:?}, {:?}", pos1, pos2);
-
                                             if pos1 < pos2 {
                                                 dir.childrens.remove(pos1);
                                                 dir.childrens.insert(pos2 - 1, item);
