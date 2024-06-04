@@ -49,7 +49,7 @@ const spellCheckPlugin = ViewPlugin.fromClass(
                   decoration: Decoration.mark({ class: "misspelled" }),
                 };
               }
-            })
+            }),
           );
         }
       });
@@ -61,15 +61,15 @@ const spellCheckPlugin = ViewPlugin.fromClass(
 
         this.decorations = Decoration.set(
           badSpelling.map(({ from, to, decoration }) =>
-            decoration.range(from, to)
-          )
+            decoration.range(from, to),
+          ),
         );
       });
     }
   },
   {
     decorations: (v) => v.decorations,
-  }
+  },
 );
 
 export default spellCheckPlugin;

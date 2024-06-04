@@ -14,12 +14,13 @@ interface Props {
 
 const Editor = (props: Props) => {
   const { onChange, initialDoc, mode, width } = props;
+
   const { fontScale } = useContext(FontScaleContext);
 
   if (mode !== ViewMode.Preview) {
     const handleChange = useCallback(
       (state: EditorState) => onChange(state.doc.toString()),
-      [onChange]
+      [onChange],
     );
     const [refContainer, editorView] = useCodeMirror<HTMLDivElement>({
       initialDoc,
@@ -30,9 +31,9 @@ const Editor = (props: Props) => {
 
     return (
       <EditorWindowDiv
+        ref={refContainer}
         $mode={mode}
         $width={width}
-        ref={refContainer}
         $fontScale={fontScale}
       />
     );

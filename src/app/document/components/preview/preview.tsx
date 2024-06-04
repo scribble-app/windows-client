@@ -25,6 +25,7 @@ const schema = {
 
 const Preview = (props: Props) => {
   const { doc, mode } = props;
+
   const { fontScale } = useContext(FontScaleContext);
 
   if (mode !== ViewMode.Edit) {

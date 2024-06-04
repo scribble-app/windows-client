@@ -1,7 +1,6 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { MainText } from "../styles/globalStyles";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import ViewModeContext from "@/contexts/viewModeContext";
