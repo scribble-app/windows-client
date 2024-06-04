@@ -1,4 +1,4 @@
-import { createElement } from "react";
+import { createElement, useContext } from "react";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
@@ -8,6 +8,7 @@ import RemarkCode from "./remarkCode";
 import { defaultSchema } from "hast-util-sanitize";
 import "github-markdown-css/github-markdown.css";
 import { ViewMode } from "@/type";
+import FontScaleContext from "@/contexts/fontScaleContext";
 
 interface Props {
   doc: string;
@@ -25,6 +26,8 @@ const schema = {
 const Preview = (props: Props) => {
   const { doc, mode } = props;
 
+  const { fontScale } = useContext(FontScaleContext);
+
   if (mode !== ViewMode.Edit) {
     const md = unified()
       .use(remarkParse)
@@ -39,7 +42,7 @@ const Preview = (props: Props) => {
       .processSync(doc).result;
 
     return (
-      <PreviewWindow className="markdown-body editor">
+      <PreviewWindow className="markdown-body editor" $fontScale={fontScale}>
         {" "}
         {md as string}
       </PreviewWindow>

@@ -1,8 +1,9 @@
 import { EditorState } from "@codemirror/state";
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
 import useCodeMirror from "@/hooks/useCodeMirror";
 import { EditorWindowDiv } from "../../style";
 import { ViewMode } from "@/type";
+import FontScaleContext from "@/contexts/fontScaleContext";
 
 interface Props {
   initialDoc: string;
@@ -13,6 +14,8 @@ interface Props {
 
 const Editor = (props: Props) => {
   const { onChange, initialDoc, mode, width } = props;
+
+  const { fontScale } = useContext(FontScaleContext);
 
   if (mode !== ViewMode.Preview) {
     const handleChange = useCallback(
@@ -26,7 +29,14 @@ const Editor = (props: Props) => {
 
     editorView?.focus();
 
-    return <EditorWindowDiv $mode={mode} $width={width} ref={refContainer} />;
+    return (
+      <EditorWindowDiv
+        ref={refContainer}
+        $mode={mode}
+        $width={width}
+        $fontScale={fontScale}
+      />
+    );
   }
 };
 
