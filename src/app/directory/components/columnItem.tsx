@@ -53,7 +53,7 @@ const ColumnItem = (props: Props) => {
 
   const { fontScale } = useContext(FontScaleContext);
 
-  const clikcRemove = () => {
+  const clickRemove = () => {
     invoke<Column[]>("remove_column", { columnId: column.id })
       .then(setColumns)
       .catch(console.error);
@@ -65,7 +65,7 @@ const ColumnItem = (props: Props) => {
         <ColumnTitleText $color={column.color} $fontScale={fontScale}>
           {column.title}
         </ColumnTitleText>
-        <button onClick={() => clikcRemove()}>
+        <button onClick={() => clickRemove()}>
           <TrashIcon />
         </button>
       </ColumnTitleDiv>
