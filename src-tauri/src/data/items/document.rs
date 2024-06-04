@@ -30,7 +30,7 @@ pub struct Document {
     created_at: u64,
     updated_at: u64,
     progress: Progress,
-    tags: Vec<Tag>,
+    pub tags: Vec<Tag>,
 }
 
 trait NoteMethods {

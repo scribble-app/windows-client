@@ -30,10 +30,12 @@ const spellCheckPlugin = ViewPlugin.fromClass(
         .split(/\s+/)
         .filter((word) => word.length > 0 && /^[a-zA-Z]+$/i.test(word));
 
+      console.log(words);
+
       words.forEach((word) => {
         const matchIndex = text.lastIndexOf(word);
         if (matchIndex !== -1) {
-          const from = text.indexOf(word);
+          const from = matchIndex;
           const to = from + word.length;
 
           badSpellingPromises.push(

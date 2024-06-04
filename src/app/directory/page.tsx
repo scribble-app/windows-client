@@ -46,49 +46,110 @@ const Page = () => {
     highlightIndicator(e);
   };
 
-  const handleDragLeave = () => {};
+  const handleDragLeave = () => {
+    clearHighlights();
+  };
 
-  const handleDragEnd = (e: DragEvent<HTMLButtonElement>) => {};
+  const handleDragEnd = (e: DragEvent<HTMLButtonElement>, column: Column) => {
+    const cardId = e.dataTransfer.getData("itemId");
+    clearHighlights();
+    const indicators = getIndicators();
+    const { element } = getNearestIndicator(e, indicators);
+    const before = element.dataset.before || "-1";
+
+    if (before === cardId) return;
+
+    invoke<Item[]>("nasral", {
+      itemId: cardId,
+      tagId: column.id,
+      color: column.color,
+      title: column.title,
+      targetId: before,
+    })
+      .then((result) => {
+        setChildrens(result);
+      })
+      .catch(console.error);
+  };
 
   const highlightIndicator = (e: DragEvent<HTMLButtonElement>) => {
-    const indicators = getIdicators();
+    const indicators = getIndicators();
+    clearHighlights(indicators);
     const el = getNearestIndicator(e, indicators);
 
     el.element.style.opacity = "1";
   };
 
-  const getNearestIndicator = (
-    e: DragEvent<HTMLButtonElement>,
-    indicators: HTMLElement[],
-  ) => {
-    const DISTANCE_OFFSET = 50;
+  const clearHighlights = (els?: HTMLElement[]) => {
+    const indicators = els || getIndicators();
 
-    const el = indicators.reduce(
-      (closest, child) => {
-        const box = child.getBoundingClientRect();
-
-        const offset = e.clientY - (box.top + DISTANCE_OFFSET);
-
-        if (offset < 0 && offset > closest.offset) {
-          return { offset: offset, element: child };
-        } else {
-          return closest;
-        }
-      },
-      {
-        offset: Number.NEGATIVE_INFINITY,
-        element: indicators[indicators.length - 1],
-      },
-    );
-
-    return el;
+    indicators.forEach((i) => {
+      i.style.opacity = "0";
+    });
   };
 
-  const getIdicators = () => {
+  const removeHandleDragEnd = (e: DragEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    clearHighlights();
+    e.currentTarget.style.border = "none";
+    const cardId = e.dataTransfer.getData("itemId");
+
+    invoke<Item[]>("nasral", {
+      itemId: cardId,
+      tagId: "",
+      color: "",
+      title: "",
+      targetId: "",
+    })
+      .then((result) => {
+        setChildrens(result);
+      })
+      .catch(console.error);
+  };
+
+  const removeHandleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    clearHighlights();
+    e.currentTarget.style.border = "1px solid white";
+  };
+
+  const removeHandleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.currentTarget.style.border = "none";
+  };
+
+  const getNearestIndicator = (
+    e: DragEvent<HTMLButtonElement>,
+    indicators: HTMLElement[]
+  ) => {
+    const dragEventX = e.clientX;
+    const dragEventY = e.clientY;
+
+    let nearestIndicator = indicators[0];
+    let nearestDistance = Infinity;
+
+    indicators.forEach((indicator) => {
+      const rect = indicator.getBoundingClientRect();
+      const indicatorX = rect.left + rect.width / 2;
+      const indicatorY = rect.top + rect.height / 2;
+      const distance = Math.hypot(
+        dragEventX - indicatorX,
+        dragEventY - indicatorY
+      );
+
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestIndicator = indicator;
+      }
+    });
+
+    return { element: nearestIndicator };
+  };
+
+  const getIndicators = () => {
     return Array.from(
       document.querySelectorAll(
-        "#item-drop-indicator",
-      ) as unknown as HTMLElement[],
+        "#item-drop-indicator"
+      ) as unknown as HTMLElement[]
     );
   };
 
@@ -118,13 +179,18 @@ const Page = () => {
           ))}
         </ColumnsContainerDiv>
       </ColumnsDiv>
-      <UntaggedItemsDiv>
+      <UntaggedItemsDiv
+        onDragOver={removeHandleDragOver}
+        onDrop={(e) => removeHandleDragEnd(e as any)}
+        onDragLeave={removeHandleDragLeave}
+        draggable={false}
+      >
         {childrens.map((child) => {
           if ("Document" in child) {
             const documentItem = child as { Document: Doc };
             if (
               !documentItem.Document.tags.some(
-                (tag) => tag.is_belong_column === true,
+                (tag) => tag.is_belong_column === true
               )
             ) {
               return (
@@ -139,7 +205,7 @@ const Page = () => {
             const directoryItem = child as { Directory: Dir };
             if (
               !directoryItem.Directory.tags.some(
-                (tags) => tags.is_belong_column === true,
+                (tags) => tags.is_belong_column === true
               )
             ) {
               return (

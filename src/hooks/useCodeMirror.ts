@@ -56,7 +56,7 @@ const syntaxHighlightingCustom = HighlightStyle.define([
 ]);
 
 const useCodeMirror = <T extends Element>(
-  props: Props,
+  props: Props
 ): [MutableRefObject<T | null>, EditorView?] => {
   const refContainer = useRef<T>(null);
   const [editorView, setEditorView] = useState<EditorView>();

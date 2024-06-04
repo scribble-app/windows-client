@@ -11,7 +11,7 @@ use data::{
             toggle_open_directory,
         },
         document::{check_word, create_document, create_example_md, get_document, write_document},
-        get_title, item_move, remove_current,
+        get_title, item_move, nasral, remove_current,
     },
     Data,
 };
@@ -63,7 +63,8 @@ fn main() {
             toggle_open_directory,
             item_move,
             remove_current,
-            check_word
+            check_word,
+            nasral,
         ])
         .run(generate_context!())
         .expect("error while running tauri application");
