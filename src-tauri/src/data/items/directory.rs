@@ -18,7 +18,7 @@ pub struct Directory {
     pub id: String,
     pub title: String,
     is_open: bool,
-    tags: Vec<Tag>,
+    pub tags: Vec<Tag>,
     columns: Vec<Column>,
     pub childrens: Vec<Item>,
 }
@@ -190,7 +190,11 @@ pub fn add_column(
 }
 
 #[command]
-pub fn remove_column(column_id: String, state: State<AppState>) -> Result<Vec<Column>, String> {
+pub fn remove_column(
+    column_id: String,
+    state: State<AppState>,
+    window: Window,
+) -> Result<Vec<Column>, String> {
     if let StateVariant::Directory(id) = state.state.lock().unwrap().deref() {
         let mut data = Data::read();
 
@@ -202,10 +206,27 @@ pub fn remove_column(column_id: String, state: State<AppState>) -> Result<Vec<Co
             for child in childrens {
                 if let Item::Directory(dir) = child {
                     if dir.id == id {
+                        let mut column_title = "".to_string();
+
+                        for column in &dir.columns {
+                            if column.id == column_id {
+                                column_title = column.title.clone();
+                            }
+                        }
+
+                        for child in &mut dir.childrens {
+                            if let Item::Document(doc) = child {
+                                if doc.tags.len() > 0 && doc.tags[0].title == column_title {
+                                    doc.tags.pop();
+                                }
+                            }
+                        }
+
                         dir.columns.retain(|column| column.id != column_id);
+
                         return Ok(dir.columns.clone());
-                    } else if let Ok(resutl) = remove(&mut dir.childrens, id, column_id) {
-                        return Ok(resutl);
+                    } else if let Ok(результ) = remove(&mut dir.childrens, id, column_id) {
+                        return Ok(результ);
                     }
                 }
             }
@@ -215,6 +236,14 @@ pub fn remove_column(column_id: String, state: State<AppState>) -> Result<Vec<Co
         return match remove(&mut data, &id, &column_id) {
             Ok(result) => {
                 Data::write(data);
+                window
+                    .emit(
+                        "removed",
+                        ItemEvent {
+                            status: "removed".to_string(),
+                        },
+                    )
+                    .unwrap();
                 Ok(result)
             }
             Err(error) => Err(error),

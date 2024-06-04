@@ -7,7 +7,7 @@ use directory::Directory;
 use document::Document;
 use serde::{Deserialize, Serialize};
 use std::{env, fs::remove_file, ops::Deref, path::Path};
-use tauri::{command, State};
+use tauri::{command, State, Window};
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -50,7 +50,7 @@ impl Tag {
 }
 
 #[command]
-pub fn nasral(
+pub fn rearange_column(
     item_id: String,
     tag_id: String,
     target_id: String,
@@ -58,11 +58,10 @@ pub fn nasral(
     title: String,
     state: State<AppState>,
 ) -> Result<Vec<Item>, String> {
-    println!("huh? {:?}", target_id);
     if let StateVariant::Directory(id) = state.state.lock().unwrap().deref() {
         let mut data = Data::read();
 
-        fn recursive_nasral(
+        fn recursive_rearange_column(
             childrens: &mut Vec<Item>,
             item_id: &str,
             tag_id: &str,
@@ -77,8 +76,12 @@ pub fn nasral(
                         for item in &mut dir.childrens {
                             if let Item::Document(doc) = item {
                                 if doc.id == item_id {
-                                    let len = doc.tags.len();
                                     doc.tags.pop();
+
+                                    let mut item = Item::Document(Document::new());
+
+                                    let mut pos1 = None;
+                                    let mut pos2 = None;
 
                                     if tag_id != "".to_string() {
                                         doc.tags.push(Tag::new_with_id(
@@ -87,30 +90,31 @@ pub fn nasral(
                                             color.to_string(),
                                         ));
 
-                                        let mut pos1 = None;
-                                        let mut pos2 = None;
-
-                                        for (index, child) in dir.childrens.iter().enumerate() {
-                                            match child {
-                                                Item::Document(doc) => {
-                                                    if doc.id == item_id {
-                                                        pos1 = Some(index);
-                                                    } else if doc.id == target_id {
-                                                        pos2 = Some(index);
-                                                    }
+                                        for (i, child) in dir.childrens.clone().iter().enumerate() {
+                                            if let Item::Document(doc) = child {
+                                                if doc.id == item_id {
+                                                    item = child.clone();
+                                                    pos1 = Some(i);
                                                 }
-                                                _ => {}
+                                                if doc.id == target_id {
+                                                    pos2 = Some(i);
+                                                }
                                             }
                                         }
 
                                         if let (Some(pos1), Some(pos2)) = (pos1, pos2) {
-                                            if len == 0 && pos1 < pos2 {
-                                                return Ok(dir.childrens.clone());
+                                            println!("{:?}, {:?}", pos1, pos2);
+
+                                            if pos1 < pos2 {
+                                                dir.childrens.remove(pos1);
+                                                dir.childrens.insert(pos2 - 1, item);
+                                            } else if pos1 > pos2 {
+                                                dir.childrens.remove(pos1);
+                                                dir.childrens.insert(pos2, item);
                                             }
-                                            dir.childrens.swap(pos1, pos2);
                                         } else if let Some(pos1) = pos1 {
-                                            let removed = dir.childrens.remove(pos1);
-                                            dir.childrens.push(removed);
+                                            dir.childrens.remove(pos1);
+                                            dir.childrens.push(item);
                                         }
                                     }
 
@@ -118,7 +122,7 @@ pub fn nasral(
                                 }
                             }
                         }
-                    } else if let Ok(result) = recursive_nasral(
+                    } else if let Ok(result) = recursive_rearange_column(
                         &mut dir.childrens,
                         item_id,
                         tag_id,
@@ -134,7 +138,7 @@ pub fn nasral(
             Err("Directory not found".to_string())
         }
 
-        return match recursive_nasral(
+        return match recursive_rearange_column(
             &mut data, &item_id, &tag_id, &id, &color, &target_id, &title,
         ) {
             Ok(result) => {
@@ -193,7 +197,12 @@ pub fn get_title(id: String, state: State<AppState>) -> Result<String, String> {
 }
 
 #[command]
-pub fn item_move(item_id: String, target_id: String, is_directory: bool) -> Vec<Item> {
+pub fn item_move(
+    item_id: String,
+    target_id: String,
+    is_directory: bool,
+    window: Window,
+) -> Vec<Item> {
     let mut data = Data::read();
     let mut item = Item::Document(Document::new());
 
@@ -254,6 +263,15 @@ pub fn item_move(item_id: String, target_id: String, is_directory: bool) -> Vec<
 
     remove(&mut data, &item_id, &mut item);
     add(&mut data, &target_id, is_directory, &mut item);
+
+    window
+        .emit(
+            "removed",
+            ItemEvent {
+                status: "removed".to_string(),
+            },
+        )
+        .unwrap();
 
     Data::write(data.clone());
 

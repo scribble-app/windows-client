@@ -17,6 +17,11 @@ import DirectorySmallItem from "./components/directorySmallItem";
 import CreateColumnItem from "./components/createColumnItem";
 import ColumnItem from "./components/columnItem";
 import FontScaleContext from "@/contexts/fontScaleContext";
+import { listen } from "@tauri-apps/api/event";
+
+interface ItemEvent {
+  status: string;
+}
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -26,6 +31,24 @@ const Page = () => {
   const [title, setTitle] = useDirectoryTitleState(searchParams);
   const [childrens, setChildrens] = useState<Item[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
+
+  useEffect(() => {
+    const unlisten = listen<ItemEvent>("removed", (event) => {
+      if (event.payload.status === "removed") {
+        invoke<Dir>("get_directory", { id: searchParams.get("id") })
+          .then((result) => {
+            setTitle(result.title === "" ? "unnamed" : result.title);
+            setColumns(result.columns);
+            setChildrens(result.childrens);
+          })
+          .catch((error) => console.error(error));
+      }
+    });
+
+    return () => {
+      unlisten.then((f) => f());
+    };
+  }, []);
 
   useEffect(() => {
     invoke<Dir>("get_directory", { id: searchParams.get("id") })
@@ -59,7 +82,7 @@ const Page = () => {
 
     if (before === cardId) return;
 
-    invoke<Item[]>("nasral", {
+    invoke<Item[]>("rearange_column", {
       itemId: cardId,
       tagId: column.id,
       color: column.color,
@@ -94,7 +117,7 @@ const Page = () => {
     e.currentTarget.style.border = "none";
     const cardId = e.dataTransfer.getData("itemId");
 
-    invoke<Item[]>("nasral", {
+    invoke<Item[]>("rearange_column", {
       itemId: cardId,
       tagId: "",
       color: "",
