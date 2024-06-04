@@ -28,25 +28,30 @@ const spellCheckPlugin = ViewPlugin.fromClass(
       const words = text
         .replace(/[^\w\s]/g, "")
         .split(/\s+/)
-        .filter((word) => word.length > 0);
+        .filter((word) => word.length > 0 && /^[a-zA-Z]+$/i.test(word));
+
+      console.log(words);
 
       words.forEach((word) => {
-        const from = text.indexOf(word);
-        const to = from + word.length;
+        const matchIndex = text.lastIndexOf(word);
+        if (matchIndex !== -1) {
+          const from = matchIndex;
+          const to = from + word.length;
 
-        badSpellingPromises.push(
-          invoke("check_word", { word }).then((res) => {
-            if (res) {
-              return { from, to };
-            } else {
-              return {
-                from,
-                to,
-                decoration: Decoration.mark({ class: "misspelled" }),
-              };
-            }
-          }),
-        );
+          badSpellingPromises.push(
+            invoke("check_word", { word }).then((res) => {
+              if (res) {
+                return { from, to };
+              } else {
+                return {
+                  from,
+                  to,
+                  decoration: Decoration.mark({ class: "misspelled" }),
+                };
+              }
+            })
+          );
+        }
       });
 
       Promise.all(badSpellingPromises).then((resolvedValues) => {
@@ -56,15 +61,15 @@ const spellCheckPlugin = ViewPlugin.fromClass(
 
         this.decorations = Decoration.set(
           badSpelling.map(({ from, to, decoration }) =>
-            decoration.range(from, to),
-          ),
+            decoration.range(from, to)
+          )
         );
       });
     }
   },
   {
     decorations: (v) => v.decorations,
-  },
+  }
 );
 
 export default spellCheckPlugin;

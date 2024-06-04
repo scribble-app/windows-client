@@ -28,12 +28,15 @@ export const ResizerColumnDiv = styled.div`
 export const EditorWindowDiv = styled.div.attrs<{
   $mode: ViewMode;
   $width: number;
+  $fontScale: number;
 }>((props) => ({
   style: {
     width: `${props.$mode == ViewMode.Edit ? "100" : props.$width}%`,
   },
 }))`
   height: 100%;
+
+  font-size: calc(100% + ${(props) => props.$fontScale}px);
 
   .cm-editor {
     outline: none;
@@ -54,7 +57,7 @@ export const EditorWindowDiv = styled.div.attrs<{
   }
 `;
 
-export const PreviewWindow = styled.div`
+export const PreviewWindow = styled.div<{ $fontScale: number }>`
   color: ${(props) => props.theme.colors.white};
   padding: 12px;
   background-color: transparent;
@@ -68,6 +71,29 @@ export const PreviewWindow = styled.div`
 
   :first-child {
     margin-top: 0px;
+  }
+
+  h1 {
+    font-size: calc(2em + ${(props) => props.$fontScale}px);
+  }
+
+  h2 {
+    font-size: calc(1.5em + ${(props) => props.$fontScale}px);
+  }
+
+  h3 {
+    font-size: calc(1.25em + ${(props) => props.$fontScale}px);
+  }
+
+  p,
+  li,
+  th,
+  td {
+    font-size: calc(16px + ${(props) => props.$fontScale}px);
+  }
+
+  span {
+    font-size: calc(100% + ${(props) => props.$fontScale}px);
   }
 
   h1,

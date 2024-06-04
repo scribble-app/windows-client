@@ -155,6 +155,7 @@ export const UntaggedItemsDiv = styled.div`
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  min-height: 32px;
 `;
 
 export const SmallItemButton = styled.button`

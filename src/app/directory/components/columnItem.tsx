@@ -5,7 +5,13 @@ import {
   ColumnTitleDiv,
   ColumnTitleText,
 } from "../style";
-import { Dispatch, DragEvent, SetStateAction, useContext } from "react";
+import {
+  Dispatch,
+  DragEvent,
+  SetStateAction,
+  useContext,
+  useEffect,
+} from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import ColumnDropIndicator from "./columnDropIndicator";
 import DocumentSmallItem from "./documentSmallItem";
@@ -19,7 +25,7 @@ interface Props {
   handleDragStart: (e: DragEvent<HTMLButtonElement>, item: Item) => void;
   handleDragOver: (e: DragEvent<HTMLButtonElement>) => void;
   handleDragLeave: () => void;
-  handleDragEnd: (e: DragEvent<HTMLButtonElement>) => void;
+  handleDragEnd: (e: DragEvent<HTMLButtonElement>, column: Column) => void;
 }
 
 const ColumnItem = (props: Props) => {
@@ -32,6 +38,18 @@ const ColumnItem = (props: Props) => {
     handleDragLeave,
     handleDragEnd,
   } = props;
+
+  useEffect(() => {
+    const indicators = document.querySelectorAll("[data-column]");
+    indicators.forEach((indicator) => {
+      if (
+        indicator.nextElementSibling &&
+        indicator.nextElementSibling.id === "item-drop-indicator"
+      ) {
+        indicator.remove();
+      }
+    });
+  }, [childrens]);
 
   const { fontScale } = useContext(FontScaleContext);
 
@@ -52,7 +70,7 @@ const ColumnItem = (props: Props) => {
         </button>
       </ColumnTitleDiv>
       <ColumnItemsDiv
-        onDrop={(e) => handleDragEnd(e as any)}
+        onDrop={(e) => handleDragEnd(e as any, column)}
         onDragOver={(e) => handleDragOver(e as any)}
         onDragLeave={handleDragLeave}
       >

@@ -50,6 +50,105 @@ impl Tag {
 }
 
 #[command]
+pub fn nasral(
+    item_id: String,
+    tag_id: String,
+    target_id: String,
+    color: String,
+    title: String,
+    state: State<AppState>,
+) -> Result<Vec<Item>, String> {
+    println!("huh? {:?}", target_id);
+    if let StateVariant::Directory(id) = state.state.lock().unwrap().deref() {
+        let mut data = Data::read();
+
+        fn recursive_nasral(
+            childrens: &mut Vec<Item>,
+            item_id: &str,
+            tag_id: &str,
+            dir_id: &str,
+            color: &str,
+            target_id: &str,
+            title: &str,
+        ) -> Result<Vec<Item>, String> {
+            for child in childrens {
+                if let Item::Directory(dir) = child {
+                    if dir.id == dir_id {
+                        for item in &mut dir.childrens {
+                            if let Item::Document(doc) = item {
+                                if doc.id == item_id {
+                                    let len = doc.tags.len();
+                                    doc.tags.pop();
+
+                                    if tag_id != "".to_string() {
+                                        doc.tags.push(Tag::new_with_id(
+                                            tag_id.to_string(),
+                                            title.to_string(),
+                                            color.to_string(),
+                                        ));
+
+                                        let mut pos1 = None;
+                                        let mut pos2 = None;
+
+                                        for (index, child) in dir.childrens.iter().enumerate() {
+                                            match child {
+                                                Item::Document(doc) => {
+                                                    if doc.id == item_id {
+                                                        pos1 = Some(index);
+                                                    } else if doc.id == target_id {
+                                                        pos2 = Some(index);
+                                                    }
+                                                }
+                                                _ => {}
+                                            }
+                                        }
+
+                                        if let (Some(pos1), Some(pos2)) = (pos1, pos2) {
+                                            if len == 0 && pos1 < pos2 {
+                                                return Ok(dir.childrens.clone());
+                                            }
+                                            dir.childrens.swap(pos1, pos2);
+                                        } else if let Some(pos1) = pos1 {
+                                            let removed = dir.childrens.remove(pos1);
+                                            dir.childrens.push(removed);
+                                        }
+                                    }
+
+                                    return Ok(dir.childrens.clone());
+                                }
+                            }
+                        }
+                    } else if let Ok(result) = recursive_nasral(
+                        &mut dir.childrens,
+                        item_id,
+                        tag_id,
+                        dir_id,
+                        color,
+                        title,
+                        target_id,
+                    ) {
+                        return Ok(result);
+                    }
+                }
+            }
+            Err("Directory not found".to_string())
+        }
+
+        return match recursive_nasral(
+            &mut data, &item_id, &tag_id, &id, &color, &target_id, &title,
+        ) {
+            Ok(result) => {
+                Data::write(data);
+                Ok(result)
+            }
+            Err(error) => Err(error),
+        };
+    }
+
+    Err("Incorrect state".to_string())
+}
+
+#[command]
 pub fn get_title(id: String, state: State<AppState>) -> Result<String, String> {
     let data = Data::read();
 
